@@ -1,12 +1,12 @@
 import sys
 import os
-import tools_v001 as tools
 from os.path import dirname
 from selenium.webdriver.common.keys import Keys
-
+from Tools import tools_v000 as tools
 
 # -16 for the name of this project NewProjectPython
 save_path = dirname(__file__)[ : -16]
+
 propertiesFolder_path = save_path + "Properties"
 
 
@@ -57,15 +57,18 @@ def create():
 
             # Create Repository
             create_repository_button = tools.driver.find_element_by_xpath('/html/body/div[4]/main/div/form/div[6]/button')
-            # create_repository_button.click()
-
-
+            create_repository_button.click()
             
+            tools.closeBrowserChrome()
+
+            # open terminal to clone the repository into the folder
 
 
 
 
-            # tools.closeBrowserChrome()
+
+
+
     except IndexError as e1:
         print ("You don't place a name for the project") 
     except WindowsError as e2:
