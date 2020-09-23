@@ -3,18 +3,18 @@ import os
 from os.path import dirname
 from selenium.webdriver.common.keys import Keys
 from Tools import tools_v000 as tools
+import time
 
 # -16 for the name of this project NewProjectPython
 save_path = dirname(__file__)[ : -16]
 
 propertiesFolder_path = save_path + "Properties"
 
-
 def create():
     try :
         projectName = str(sys.argv[1])
         if projectName != '' :
-            tools.createFolder(save_path, projectName)
+            #tools.createFolder(save_path, projectName)
 
             GitLab_user = tools.readProperty(propertiesFolder_path, 'NewProjectPython', 'GitLab_user=')
             GitLab_password = tools.readProperty(propertiesFolder_path, 'NewProjectPython', 'GitLab_password=')
@@ -43,30 +43,56 @@ def create():
             repository_name.send_keys(projectName)
 
             # Initialize this repository with a README
+            time.sleep(1)
             repository_auto_init = tools.driver.find_element_by_id('repository_auto_init')
             repository_auto_init.click()
 
             # add .gitignore 
-            gitignore_list = tools.driver.find_element_by_xpath('/html/body/div[4]/main/div/form/div[6]/div[4]/div[2]/details/summary')
+            time.sleep(1)
+            gitignore_list = tools.driver.find_element_by_id('repository_gitignore_template_toggle')
             gitignore_list.click()
 
+            # Need to push the tab
+            time.sleep(1)
+            gitignore_button = tools.driver.find_element_by_xpath('//*[@id="new_repository"]/div[6]/div[4]/div[2]/span[2]/details/summary')
+            gitignore_button.click()
+
+            time.sleep(1)
             gitignore_input = tools.driver.find_element_by_id('context-ignore-filter-field')
             gitignore_input.send_keys('Python')
             gitignore_input.send_keys(Keys.ARROW_DOWN)
             gitignore_input.send_keys(Keys.ENTER)
 
             # Create Repository
+            time.sleep(1)
             create_repository_button = tools.driver.find_element_by_xpath('/html/body/div[4]/main/div/form/div[6]/button')
             create_repository_button.click()
             
             tools.closeBrowserChrome()
 
             # open terminal to clone the repository into the folder
+            os.chdir(save_path)
+            os.system('git clone https://github.com/Stonesth/' + projectName + '.git' )
+            os.chdir(save_path + projectName)
+            os.system('git clone https://github.com/Stonesth/Tools.git' )
 
+            # Ignore the folder Tools part of an other project
+            # Tools/
+            tools.writeToFile(save_path + projectName + '/' + '.gitignore', '\n# Ignore the folder Tools part of an other project \n')
+            tools.writeToFile(save_path + projectName + '/' + '.gitignore', 'Tools/\n')
 
-
-
-
+            # Create the main program
+            tools.createFile(save_path + projectName + '/', projectName.lower() + '.py')
+            tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', 'from Tools import tools_v000 as tools\n')
+            tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', 'import os\n')
+            tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', 'from os.path import dirname\n')
+            tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', '\n\n')
+            tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', '# -' + str(len(projectName)) + ' for the name of this project '+projectName+'\n')
+            tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', 'save_path = dirname(__file__)[ : -'+ str(len(projectName))+']'+'\n')
+            tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', 'propertiesFolder_path = save_path + "Properties"\n\n')
+            tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', '# Example of used\n')
+            tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', '# user_text = tools.readProperty(propertiesFolder_path, \''+ projectName + '\', \'user_text=\')\n')
+            
 
 
     except IndexError as e1:
@@ -74,6 +100,7 @@ def create():
     except WindowsError as e2:
         print ("Project : " + projectName + " already exist") 
     
+create()
 
     
 # https://www.google.com/search?q=multiple+account+git&rlz=1C1GCEA_frNL817NL817&oq=multiple+account+git&aqs=chrome.0.0l8.7053j0j7&sourceid=chrome&ie=UTF-8
@@ -97,5 +124,19 @@ def create():
     # requires the use of parenthesis.
     # print("Is this what you just said? " + txt.text() )
 
-create()
 # tools.readProperty(propertiesFolder_path, 'NewProjectPython', 'GitLab_password=')
+
+
+# import subprocess
+
+# def runShellCommand() :
+#     # projectpath = 'C:/WINDOWS/system32/' # ou '/bin/myapp' sous Linux
+#     # subprocess.check_call( ('cd',projectpath) , shell=True )
+
+#     # subprocess.check_call( ('dir', ''), shell=True)
+    
+#     os.chdir('C:\Users\JF30LB\Onedrive - NN\Documents\JIRA\python\Tools')
+#     os.system('dir')
+#     os.system('git status')
+
+# runShellCommand()
