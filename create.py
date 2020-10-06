@@ -5,6 +5,9 @@ from selenium.webdriver.common.keys import Keys
 from Tools import tools_v000 as tools
 import time
 
+
+from selenium.webdriver.common.action_chains import ActionChains
+
 # -16 for the name of this project NewProjectPython
 save_path = dirname(__file__)[ : -16]
 
@@ -19,6 +22,7 @@ def create():
             GitLab_user = tools.readProperty(propertiesFolder_path, 'NewProjectPython', 'GitLab_user=')
             GitLab_password = tools.readProperty(propertiesFolder_path, 'NewProjectPython', 'GitLab_password=')
             tools.openBrowserChrome()
+            # tools.driver.maximize_window()
             tools.driver.get('http://github.com/login')
 
             # user name
@@ -30,32 +34,43 @@ def create():
             password.send_keys(GitLab_password)
 
             # Sign in
-            sing_in = tools.driver.find_element_by_xpath('/html/body/div[3]/main/div/form/div[4]/input[9]')
+            sing_in = tools.driver.find_element_by_xpath('/html/body/div[3]/main/div/form/div[4]/input[12]')
             sing_in.click()
 
             tools.waitLoadingPageByID('start-of-content')
 
             # New Repository
             tools.driver.get('https://github.com/new')
-            tools.waitLoadingPageByID('repository_name')
-
+            tools.waitLoadingPageByID2(20,'repository_name')
             repository_name = tools.driver.find_element_by_id('repository_name')
             repository_name.send_keys(projectName)
 
+            # Removed info from cookies (Refused all)
+            tools.waitLoadingPageByXPATH2(20, '/html/body/div[9]/div/div/div/div[1]/div/div/button[3]')
+            cookies_button = tools.driver.find_element_by_xpath('/html/body/div[9]/div/div/div/div[1]/div/div/button[3]')
+            cookies_button.click()
+
             # Initialize this repository with a README
-            time.sleep(1)
+            tools.waitLoadingPageByID2(20, 'repository_auto_init')
             repository_auto_init = tools.driver.find_element_by_id('repository_auto_init')
-            repository_auto_init.click()
+            repository_auto_init.send_keys(Keys.SPACE)
+            # repository_auto_init.click()
+            
 
             # add .gitignore 
-            time.sleep(1)
+            tools.waitLoadingPageByID2(20, 'repository_gitignore_template_toggle')
             gitignore_list = tools.driver.find_element_by_id('repository_gitignore_template_toggle')
-            gitignore_list.click()
+            gitignore_list.send_keys(Keys.SPACE)
+            # gitignore_list.click()
 
             # Need to push the tab
-            time.sleep(1)
+            tools.waitLoadingPageByXPATH2(20, '//*[@id="new_repository"]/div[6]/div[4]/div[2]/span[2]/details/summary')
             gitignore_button = tools.driver.find_element_by_xpath('//*[@id="new_repository"]/div[6]/div[4]/div[2]/span[2]/details/summary')
-            gitignore_button.click()
+            
+            actions = ActionChains(tools.driver)
+            actions.move_to_element(gitignore_button).click(gitignore_button).perform()
+            
+            # gitignore_button.click()
 
             time.sleep(1)
             gitignore_input = tools.driver.find_element_by_id('context-ignore-filter-field')
