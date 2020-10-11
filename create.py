@@ -62,8 +62,12 @@ def create():
             repository_name.send_keys(projectName)
 
             # Removed info from cookies (Refused all)
-            tools.waitLoadingPageByXPATH2(20, '/html/body/div[9]/div/div/div/div[1]/div/div/button[3]')
-            cookies_button = tools.driver.find_element_by_xpath('/html/body/div[9]/div/div/div/div[1]/div/div/button[3]')
+            if platform.system() == 'Darwin' :
+                tools.waitLoadingPageByXPATH2(20, '/html/body/div[9]/div/div/div/div[1]/div/div/button[2]')
+                cookies_button = tools.driver.find_element_by_xpath('/html/body/div[9]/div/div/div/div[1]/div/div/button[2]')
+            else :
+                tools.waitLoadingPageByXPATH2(20, '/html/body/div[9]/div/div/div/div[1]/div/div/button[3]')
+                cookies_button = tools.driver.find_element_by_xpath('/html/body/div[9]/div/div/div/div[1]/div/div/button[3]')
             cookies_button.click()
             
             # Initialize this repository with a README
