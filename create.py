@@ -1,28 +1,39 @@
 import sys
 import os
+import platform
 from os.path import dirname
 from selenium.webdriver.common.keys import Keys
 from Tools import tools_v000 as tools
 import time
-
 
 from selenium.webdriver.common.action_chains import ActionChains
 
 # -16 for the name of this project NewProjectPython
 save_path = dirname(__file__)[ : -16]
 
+# test to look if the path is ended by / or not
+print (save_path)
+suffix = "/"
+print (save_path.endswith(suffix))
+if save_path.endswith(suffix) :
+    save_path = save_path + "/"
+    print (save_path)
+else :
+    save_path = save_path[ : -1]
+    print (save_path)
+
 propertiesFolder_path = save_path + "Properties"
+
 
 def create():
     try :
         projectName = str(sys.argv[1])
         if projectName != '' :
-            #tools.createFolder(save_path, projectName)
+            tools.createFolder(save_path, projectName)
 
             GitLab_user = tools.readProperty(propertiesFolder_path, 'NewProjectPython', 'GitLab_user=')
             GitLab_password = tools.readProperty(propertiesFolder_path, 'NewProjectPython', 'GitLab_password=')
             tools.openBrowserChrome()
-            # tools.driver.maximize_window()
             tools.driver.get('http://github.com/login')
 
             # user name
@@ -34,14 +45,19 @@ def create():
             password.send_keys(GitLab_password)
 
             # Sign in
-            sing_in = tools.driver.find_element_by_xpath('/html/body/div[3]/main/div/form/div[4]/input[12]')
+            if platform.system() == 'Darwin' :
+                sing_in = tools.driver.find_element_by_xpath('/html/body/div[3]/main/div/form/div[4]/input[12]')
+            else :
+                sing_in = tools.driver.find_element_by_xpath('/html/body/div[3]/main/div/form/div[4]/input[9]')
+            
             sing_in.click()
 
             tools.waitLoadingPageByID('start-of-content')
 
             # New Repository
             tools.driver.get('https://github.com/new')
-            tools.waitLoadingPageByID2(20,'repository_name')
+            tools.waitLoadingPageByID('repository_name')
+
             repository_name = tools.driver.find_element_by_id('repository_name')
             repository_name.send_keys(projectName)
 
@@ -49,15 +65,14 @@ def create():
             tools.waitLoadingPageByXPATH2(20, '/html/body/div[9]/div/div/div/div[1]/div/div/button[3]')
             cookies_button = tools.driver.find_element_by_xpath('/html/body/div[9]/div/div/div/div[1]/div/div/button[3]')
             cookies_button.click()
-
+            
             # Initialize this repository with a README
             tools.waitLoadingPageByID2(20, 'repository_auto_init')
             repository_auto_init = tools.driver.find_element_by_id('repository_auto_init')
             repository_auto_init.send_keys(Keys.SPACE)
             # repository_auto_init.click()
-            
 
-            # add .gitignore 
+             # add .gitignore 
             tools.waitLoadingPageByID2(20, 'repository_gitignore_template_toggle')
             gitignore_list = tools.driver.find_element_by_id('repository_gitignore_template_toggle')
             gitignore_list.send_keys(Keys.SPACE)
@@ -107,15 +122,13 @@ def create():
             tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', 'propertiesFolder_path = save_path + "Properties"\n\n')
             tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', '# Example of used\n')
             tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', '# user_text = tools.readProperty(propertiesFolder_path, \''+ projectName + '\', \'user_text=\')\n')
-            
-
 
     except IndexError as e1:
         print ("You don't place a name for the project") 
-    except WindowsError as e2:
+    except OSError as e2:
         print ("Project : " + projectName + " already exist") 
+        print (e2)
     
-create()
 
     
 # https://www.google.com/search?q=multiple+account+git&rlz=1C1GCEA_frNL817NL817&oq=multiple+account+git&aqs=chrome.0.0l8.7053j0j7&sourceid=chrome&ie=UTF-8
@@ -139,19 +152,5 @@ create()
     # requires the use of parenthesis.
     # print("Is this what you just said? " + txt.text() )
 
+create()
 # tools.readProperty(propertiesFolder_path, 'NewProjectPython', 'GitLab_password=')
-
-
-# import subprocess
-
-# def runShellCommand() :
-#     # projectpath = 'C:/WINDOWS/system32/' # ou '/bin/myapp' sous Linux
-#     # subprocess.check_call( ('cd',projectpath) , shell=True )
-
-#     # subprocess.check_call( ('dir', ''), shell=True)
-    
-#     os.chdir('C:\Users\JF30LB\Onedrive - NN\Documents\JIRA\python\Tools')
-#     os.system('dir')
-#     os.system('git status')
-
-# runShellCommand()
