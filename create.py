@@ -9,7 +9,8 @@ import time
 from selenium.webdriver.common.action_chains import ActionChains
 
 # -16 for the name of this project NewProjectPython
-save_path = dirname(__file__)[ : -16]
+# save_path = dirname(__file__)[ : -16]
+save_path = os.path.dirname(os.path.abspath("__file__"))[ : -16]
 
 # test to look if the path is ended by / or not
 print (save_path)
@@ -22,7 +23,7 @@ else :
     save_path = save_path[ : -1]
     print (save_path)
 
-propertiesFolder_path = save_path + "Properties"
+propertiesFolder_path = save_path + "\\"+ "Properties"
 
 
 def create():
@@ -107,6 +108,8 @@ def create():
             # Tools/
             tools.writeToFile(save_path + projectName + '/' + '.gitignore', '\n# Ignore the folder Tools part of an other project \n')
             tools.writeToFile(save_path + projectName + '/' + '.gitignore', 'Tools/\n')
+            tools.writeToFile(save_path + projectName + '/' + '.gitignore', 'build/\n')
+            tools.writeToFile(save_path + projectName + '/' + '.gitignore', 'Properties/\n')
 
             # Create the main program
             tools.createFile(save_path + projectName + '/', projectName.lower() + '.py')
@@ -115,10 +118,23 @@ def create():
             tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', 'from os.path import dirname\n')
             tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', '\n\n')
             tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', '# -' + str(len(projectName)) + ' for the name of this project '+projectName+'\n')
-            tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', 'save_path = dirname(__file__)[ : -'+ str(len(projectName))+']'+'\n')
-            tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', 'propertiesFolder_path = save_path + "Properties"\n\n')
+            # tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', 'save_path = dirname(__file__)[ : -'+ str(len(projectName))+']'+'\n')
+            tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', 'save_path = os.path.dirname(os.path.abspath("__file__"))\n')
+            # tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', 'propertiesFolder_path = save_path + "Properties"\n\n')
+            tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', 'propertiesFolder_path = save_path + "/"+ "Properties"\n\n')
             tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', '# Example of used\n')
             tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', '# user_text = tools.readProperty(propertiesFolder_path, \''+ projectName + '\', \'user_text=\')\n')
+            
+            # Create the setup program for distribution
+            tools.createFile(save_path + projectName + '/', 'setup' + '.py')
+            tools.writeToFile(save_path + projectName + '/' + 'setup' + '.py', 'from cx_Freeze import setup, Executable\n')
+            tools.writeToFile(save_path + projectName + '/' + 'setup' + '.py', '\n\n')
+            tools.writeToFile(save_path + projectName + '/' + 'setup' + '.py', 'setup(\n')
+            tools.writeToFile(save_path + projectName + '/' + 'setup' + '.py', '    name = "' + projectName.lower() + '",\n')
+            tools.writeToFile(save_path + projectName + '/' + 'setup' + '.py', '    version = "0.1",\n')
+            tools.writeToFile(save_path + projectName + '/' + 'setup' + '.py', '    description = "",\n')
+            tools.writeToFile(save_path + projectName + '/' + 'setup' + '.py', '    executables = [Executable("' + projectName.lower() + '.py")]\n')
+            tools.writeToFile(save_path + projectName + '/' + 'setup' + '.py', ')\n')
 
     except IndexError as e1:
         print ("You don't place a name for the project") 
