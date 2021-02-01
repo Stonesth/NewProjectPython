@@ -1,7 +1,10 @@
+#!/usr/bin/python
+# -*- coding:utf-8 -*-
 import sys
 import os
 import platform
 from os.path import dirname
+import selenium
 from selenium.webdriver.common.keys import Keys
 from Tools import tools_v000 as tools
 import time
@@ -14,10 +17,10 @@ save_path = os.path.dirname(os.path.abspath("__file__"))[ : -16]
 
 # test to look if the path is ended by / or not
 print (save_path)
-suffix = "/"
+suffix = "\\"
 print (save_path.endswith(suffix))
 if save_path.endswith(suffix) :
-    save_path = save_path + "/"
+    save_path = save_path + "\\"
     print (save_path)
 else :
     save_path = save_path[ : -1]
@@ -45,8 +48,8 @@ def create():
             password = tools.driver.find_element_by_id('password')
             password.send_keys(GitLab_password)
 
-            # Sign in
-            sing_in = tools.driver.find_element_by_xpath('/html/body/div[3]/main/div/form/div[4]/input[12]')
+            # Sign in                                     
+            sing_in = tools.driver.find_element_by_xpath('/html/body/div[3]/main/div/div[4]/form/input[14]')
             
             sing_in.click()
 
@@ -60,9 +63,12 @@ def create():
             repository_name.send_keys(projectName)
 
             # Removed info from cookies (Refused all)
-            tools.waitLoadingPageByXPATH2(20, '/html/body/div[9]/div/div/div/div[1]/div/div/button[2]')
-            cookies_button = tools.driver.find_element_by_xpath('/html/body/div[9]/div/div/div/div[1]/div/div/button[2]')
-            cookies_button.click()
+            try :
+                tools.waitLoadingPageByXPATH2(20, '/html/body/div[9]/div/div/div/div[1]/div/div/button[2]')
+                cookies_button = tools.driver.find_element_by_xpath('/html/body/div[9]/div/div/div/div[1]/div/div/button[2]')
+                cookies_button.click()
+            except selenium.common.exceptions.NoSuchElementException:
+                print("No info from cookies this time")
             
             # Initialize this repository with a README
             tools.waitLoadingPageByID2(20, 'repository_auto_init')
