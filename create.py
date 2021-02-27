@@ -1,7 +1,10 @@
+#!/usr/bin/python
+# -*- coding:utf-8 -*-
 import sys
 import os
 import platform
 from os.path import dirname
+import selenium
 from selenium.webdriver.common.keys import Keys
 from Tools import tools_v000 as tools
 import time
@@ -9,20 +12,21 @@ import time
 from selenium.webdriver.common.action_chains import ActionChains
 
 # -16 for the name of this project NewProjectPython
-save_path = dirname(__file__)[ : -16]
+# save_path = dirname(__file__)[ : -16]
+save_path = os.path.dirname(os.path.abspath("__file__"))[ : -16]
 
 # test to look if the path is ended by / or not
 print (save_path)
-suffix = "/"
+suffix = "\\"
 print (save_path.endswith(suffix))
 if save_path.endswith(suffix) :
-    save_path = save_path + "/"
+    save_path = save_path + "\\"
     print (save_path)
 else :
     save_path = save_path[ : -1]
     print (save_path)
 
-propertiesFolder_path = save_path + "Properties"
+propertiesFolder_path = save_path + "\\"+ "Properties"
 
 
 def create():
@@ -44,8 +48,13 @@ def create():
             password = tools.driver.find_element_by_id('password')
             password.send_keys(GitLab_password)
 
+<<<<<<< HEAD
             # Sign in
             sing_in = tools.driver.find_element_by_xpath('//*[@id="login"]/div[4]/form/input[14]')
+=======
+            # Sign in                                     
+            sing_in = tools.driver.find_element_by_xpath('/html/body/div[3]/main/div/div[4]/form/input[14]')
+>>>>>>> 6edfa8a2cf74f8ad5c9eaa6b8f7b2498661000d4
             
             sing_in.click()
 
@@ -59,9 +68,18 @@ def create():
             repository_name.send_keys(projectName)
 
             # Removed info from cookies (Refused all)
+<<<<<<< HEAD
             # tools.waitLoadingPageByXPATH2(20, '/html/body/div[9]/div/div/div/div[1]/div/div/button[2]')
             # cookies_button = tools.driver.find_element_by_xpath('/html/body/div[9]/div/div/div/div[1]/div/div/button[2]')
             # cookies_button.click()
+=======
+            try :
+                tools.waitLoadingPageByXPATH2(20, '/html/body/div[9]/div/div/div/div[1]/div/div/button[2]')
+                cookies_button = tools.driver.find_element_by_xpath('/html/body/div[9]/div/div/div/div[1]/div/div/button[2]')
+                cookies_button.click()
+            except selenium.common.exceptions.NoSuchElementException:
+                print("No info from cookies this time")
+>>>>>>> 6edfa8a2cf74f8ad5c9eaa6b8f7b2498661000d4
             
             # Initialize this repository with a README
             tools.waitLoadingPageByID2(20, 'repository_auto_init')
@@ -107,6 +125,8 @@ def create():
             # Tools/
             tools.writeToFile(save_path + projectName + '/' + '.gitignore', '\n# Ignore the folder Tools part of an other project \n')
             tools.writeToFile(save_path + projectName + '/' + '.gitignore', 'Tools/\n')
+            tools.writeToFile(save_path + projectName + '/' + '.gitignore', 'build/\n')
+            tools.writeToFile(save_path + projectName + '/' + '.gitignore', 'Properties/\n')
 
             # Create the main program
             tools.createFile(save_path + projectName + '/', projectName.lower() + '.py')
@@ -115,10 +135,23 @@ def create():
             tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', 'from os.path import dirname\n')
             tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', '\n\n')
             tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', '# -' + str(len(projectName)) + ' for the name of this project '+projectName+'\n')
-            tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', 'save_path = dirname(__file__)[ : -'+ str(len(projectName))+']'+'\n')
-            tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', 'propertiesFolder_path = save_path + "Properties"\n\n')
+            # tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', 'save_path = dirname(__file__)[ : -'+ str(len(projectName))+']'+'\n')
+            tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', 'save_path = os.path.dirname(os.path.abspath("__file__"))\n')
+            # tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', 'propertiesFolder_path = save_path + "Properties"\n\n')
+            tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', 'propertiesFolder_path = save_path + "/"+ "Properties"\n\n')
             tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', '# Example of used\n')
             tools.writeToFile(save_path + projectName + '/' + projectName.lower() + '.py', '# user_text = tools.readProperty(propertiesFolder_path, \''+ projectName + '\', \'user_text=\')\n')
+            
+            # Create the setup program for distribution
+            tools.createFile(save_path + projectName + '/', 'setup' + '.py')
+            tools.writeToFile(save_path + projectName + '/' + 'setup' + '.py', 'from cx_Freeze import setup, Executable\n')
+            tools.writeToFile(save_path + projectName + '/' + 'setup' + '.py', '\n\n')
+            tools.writeToFile(save_path + projectName + '/' + 'setup' + '.py', 'setup(\n')
+            tools.writeToFile(save_path + projectName + '/' + 'setup' + '.py', '    name = "' + projectName.lower() + '",\n')
+            tools.writeToFile(save_path + projectName + '/' + 'setup' + '.py', '    version = "0.1",\n')
+            tools.writeToFile(save_path + projectName + '/' + 'setup' + '.py', '    description = "",\n')
+            tools.writeToFile(save_path + projectName + '/' + 'setup' + '.py', '    executables = [Executable("' + projectName.lower() + '.py")]\n')
+            tools.writeToFile(save_path + projectName + '/' + 'setup' + '.py', ')\n')
 
     except IndexError as e1:
         print ("You don't place a name for the project") 
