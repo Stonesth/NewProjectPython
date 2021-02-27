@@ -48,13 +48,8 @@ def create():
             password = tools.driver.find_element_by_id('password')
             password.send_keys(GitLab_password)
 
-<<<<<<< HEAD
             # Sign in
             sing_in = tools.driver.find_element_by_xpath('//*[@id="login"]/div[4]/form/input[14]')
-=======
-            # Sign in                                     
-            sing_in = tools.driver.find_element_by_xpath('/html/body/div[3]/main/div/div[4]/form/input[14]')
->>>>>>> 6edfa8a2cf74f8ad5c9eaa6b8f7b2498661000d4
             
             sing_in.click()
 
@@ -68,18 +63,12 @@ def create():
             repository_name.send_keys(projectName)
 
             # Removed info from cookies (Refused all)
-<<<<<<< HEAD
-            # tools.waitLoadingPageByXPATH2(20, '/html/body/div[9]/div/div/div/div[1]/div/div/button[2]')
-            # cookies_button = tools.driver.find_element_by_xpath('/html/body/div[9]/div/div/div/div[1]/div/div/button[2]')
-            # cookies_button.click()
-=======
             try :
                 tools.waitLoadingPageByXPATH2(20, '/html/body/div[9]/div/div/div/div[1]/div/div/button[2]')
                 cookies_button = tools.driver.find_element_by_xpath('/html/body/div[9]/div/div/div/div[1]/div/div/button[2]')
                 cookies_button.click()
             except selenium.common.exceptions.NoSuchElementException:
                 print("No info from cookies this time")
->>>>>>> 6edfa8a2cf74f8ad5c9eaa6b8f7b2498661000d4
             
             # Initialize this repository with a README
             tools.waitLoadingPageByID2(20, 'repository_auto_init')
