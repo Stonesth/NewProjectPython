@@ -45,7 +45,7 @@ def create():
             password.send_keys(GitLab_password)
 
             # Sign in
-            sing_in = tools.driver.find_element_by_xpath('/html/body/div[3]/main/div/form/div[4]/input[12]')
+            sing_in = tools.driver.find_element_by_xpath('//*[@id="login"]/div[4]/form/input[14]')
             
             sing_in.click()
 
@@ -59,9 +59,9 @@ def create():
             repository_name.send_keys(projectName)
 
             # Removed info from cookies (Refused all)
-            tools.waitLoadingPageByXPATH2(20, '/html/body/div[9]/div/div/div/div[1]/div/div/button[2]')
-            cookies_button = tools.driver.find_element_by_xpath('/html/body/div[9]/div/div/div/div[1]/div/div/button[2]')
-            cookies_button.click()
+            # tools.waitLoadingPageByXPATH2(20, '/html/body/div[9]/div/div/div/div[1]/div/div/button[2]')
+            # cookies_button = tools.driver.find_element_by_xpath('/html/body/div[9]/div/div/div/div[1]/div/div/button[2]')
+            # cookies_button.click()
             
             # Initialize this repository with a README
             tools.waitLoadingPageByID2(20, 'repository_auto_init')
