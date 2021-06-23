@@ -17,17 +17,18 @@ save_path = os.path.dirname(os.path.abspath("__file__"))[ : -16]
 
 # test to look if the path is ended by / or not
 print (save_path)
-suffix = "\\"
+suffix = "/"
 print (save_path.endswith(suffix))
 if save_path.endswith(suffix) :
-    save_path = save_path + "\\"
+    save_path = save_path + "/"
     print (save_path)
 else :
     save_path = save_path[ : -1]
     print (save_path)
 
-propertiesFolder_path = save_path + "\\"+ "Properties"
+propertiesFolder_path = save_path + "/"+ "Properties"
 
+print ("propertiesFolder_path = "+propertiesFolder_path)
 
 def create():
     try :
@@ -37,7 +38,7 @@ def create():
 
             GitLab_user = tools.readProperty(propertiesFolder_path, 'NewProjectPython', 'GitLab_user=')
             GitLab_password = tools.readProperty(propertiesFolder_path, 'NewProjectPython', 'GitLab_password=')
-            tools.openBrowserChrome()
+            tools.openBrowserFirefox()
             tools.driver.get('http://github.com/login')
 
             # user name
@@ -49,8 +50,9 @@ def create():
             password.send_keys(GitLab_password)
 
             # Sign in
-            sing_in = tools.driver.find_element_by_xpath('//*[@id="login"]/div[4]/form/input[14]')
-            
+            # sing_in = tools.driver.find_element_by_xpath('//*[@id="login"]/div[4]/form/input[14]')
+            sing_in = tools.driver.find_element_by_xpath('//*[@id="login"]/div[4]/form/div/input[12]')
+
             sing_in.click()
 
             tools.waitLoadingPageByID('start-of-content')
@@ -87,11 +89,12 @@ def create():
             gitignore_button = tools.driver.find_element_by_xpath('//*[@id="new_repository"]/div[6]/div[4]/div[2]/span[2]/details/summary')
             
             actions = ActionChains(tools.driver)
-            actions.move_to_element(gitignore_button).click(gitignore_button).perform()
+            # actions.move_to_element(gitignore_button).click(gitignore_button).perform()
             
             # gitignore_button.click()
 
-            time.sleep(1)
+            gitignore_input = tools.driver.find_element_by_xpath('/html/body/div[4]/main/div/form/div[6]/div[4]/div[2]/span[2]/details/summary')
+            gitignore_input.send_keys(Keys.ARROW_DOWN)
             gitignore_input = tools.driver.find_element_by_id('context-ignore-filter-field')
             gitignore_input.send_keys('Python')
             gitignore_input.send_keys(Keys.ARROW_DOWN)
