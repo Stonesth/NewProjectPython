@@ -49,7 +49,7 @@ def create():
             password.send_keys(GitLab_password)
 
             # Sign in                                     
-            sing_in = tools.driver.find_element_by_xpath('/html/body/div[3]/main/div/div[4]/form/input[14]')
+            sing_in = tools.driver.find_element_by_xpath('//*[@id="login"]/div[4]/form/div/input[12]')
             
             sing_in.click()
 
@@ -77,29 +77,36 @@ def create():
             # repository_auto_init.click()
 
              # add .gitignore 
-            tools.waitLoadingPageByID2(20, 'repository_gitignore_template_toggle')
-            gitignore_list = tools.driver.find_element_by_id('repository_gitignore_template_toggle')
+            # tools.waitLoadingPageByID2(20, 'repository_gitignore_template_toggle')
+            # gitignore_list = tools.driver.find_element_by_id('repository_gitignore_template_toggle')
+            tools.waitLoadingPageByXPATH2(20, '/html/body/div[5]/main/div/form/div[7]/div[4]/div[2]/span/details/summary')
+            gitignore_list = tools.driver.find_element_by_xpath('/html/body/div[5]/main/div/form/div[7]/div[4]/div[2]/span/details/summary')
             gitignore_list.send_keys(Keys.SPACE)
             # gitignore_list.click()
 
             # Need to push the tab
-            tools.waitLoadingPageByXPATH2(20, '//*[@id="new_repository"]/div[6]/div[4]/div[2]/span[2]/details/summary')
-            gitignore_button = tools.driver.find_element_by_xpath('//*[@id="new_repository"]/div[6]/div[4]/div[2]/span[2]/details/summary')
+            # tools.waitLoadingPageByXPATH2(20, '//*[@id="new_repository"]/div[6]/div[4]/div[2]/span[2]/details/summary')
+            # gitignore_button = tools.driver.find_element_by_xpath('//*[@id="new_repository"]/div[6]/div[4]/div[2]/span[2]/details/summary')
             
-            actions = ActionChains(tools.driver)
-            actions.move_to_element(gitignore_button).click(gitignore_button).perform()
+            # actions = ActionChains(tools.driver)
+            # actions.move_to_element(gitignore_button).click(gitignore_button).perform()
             
             # gitignore_button.click()
 
-            time.sleep(1)
-            gitignore_input = tools.driver.find_element_by_id('context-ignore-filter-field')
+            # time.sleep(1)
+            # gitignore_input = tools.driver.find_element_by_id('context-ignore-filter-field')
+            # gitignore_input.send_keys('Python')
+            # gitignore_input.send_keys(Keys.ARROW_DOWN)
+            # gitignore_input.send_keys(Keys.ENTER)
+            tools.waitLoadingPageByXPATH2(20, '/html/body/div[5]/main/div/form/div[7]/div[4]/div[2]/span/details/details-menu/div/filter-input/input')
+            gitignore_input = tools.driver.find_element_by_xpath('/html/body/div[5]/main/div/form/div[7]/div[4]/div[2]/span/details/details-menu/div/filter-input/input')
             gitignore_input.send_keys('Python')
             gitignore_input.send_keys(Keys.ARROW_DOWN)
             gitignore_input.send_keys(Keys.ENTER)
 
             # Create Repository
             time.sleep(1)
-            create_repository_button = tools.driver.find_element_by_xpath('/html/body/div[4]/main/div/form/div[6]/button')
+            create_repository_button = tools.driver.find_element_by_xpath('//*[@id="new_repository"]/div[7]/button')
             create_repository_button.click()
             
             tools.closeBrowserChrome()
